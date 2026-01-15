@@ -1,0 +1,144 @@
+Pinmux settings per pin
+Format: pin (name): mux_owner gpio_owner hog?
+pin 0 (44e10800.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 1 (44e10804.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 2 (44e10808.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 3 (44e1080c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 4 (44e10810.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 5 (44e10814.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 6 (44e10818.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 7 (44e1081c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 8 (44e10820.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 9 (44e10824.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 10 (44e10828.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 11 (44e1082c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 12 (44e10830.0): ocp:gpio-keys (GPIO UNCLAIMED) function pinmux_button_pins group pinmux_button_pins
+pin 13 (44e10834.0): ocp:gpio-keys (GPIO UNCLAIMED) function pinmux_button_pins group pinmux_button_pins
+pin 14 (44e10838.0): ocp:gpio-keys (GPIO UNCLAIMED) function pinmux_button_pins group pinmux_button_pins
+pin 15 (44e1083c.0): ocp:gpio-keys (GPIO UNCLAIMED) function pinmux_button_pins group pinmux_button_pins
+pin 16 (44e10840.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 17 (44e10844.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 18 (44e10848.0): vdd_audio_regulator (GPIO UNCLAIMED) function pinmux_vdd_audio_pins group pinmux_vdd_audio_pins
+pin 19 (44e1084c.0): 2-001c (GPIO UNCLAIMED) function pinmux_sta350_pins_default group pinmux_sta350_pins_default
+pin 20 (44e10850.0): 2-001c (GPIO UNCLAIMED) function pinmux_sta350_pins_default group pinmux_sta350_pins_default
+pin 21 (44e10854.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 22 (44e10858.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 23 (44e1085c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 24 (44e10860.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 25 (44e10864.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 26 (44e10868.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 27 (44e1086c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 28 (44e10870.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 29 (44e10874.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 30 (44e10878.0): audio (GPIO UNCLAIMED) function audio_pins_default group audio_pins_default
+pin 31 (44e1087c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 32 (44e10880.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 33 (44e10884.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 34 (44e10888.0): 48060000.mmc (GPIO UNCLAIMED) function pinmux_mmc1_pins group pinmux_mmc1_pins
+pin 35 (44e1088c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 36 (44e10890.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 37 (44e10894.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 38 (44e10898.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 39 (44e1089c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 40 (44e108a0.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 41 (44e108a4.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 42 (44e108a8.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 43 (44e108ac.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 44 (44e108b0.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 45 (44e108b4.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 46 (44e108b8.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 47 (44e108bc.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 48 (44e108c0.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 49 (44e108c4.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 50 (44e108c8.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 51 (44e108cc.0): ocp:gpio-keys (GPIO UNCLAIMED) function pinmux_button_pins group pinmux_button_pins
+pin 52 (44e108d0.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 53 (44e108d4.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 54 (44e108d8.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 55 (44e108dc.0): ocp:gpio-keys (GPIO UNCLAIMED) function pinmux_button_pins group pinmux_button_pins
+pin 56 (44e108e0.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 57 (44e108e4.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 58 (44e108e8.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 59 (44e108ec.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 60 (44e108f0.0): 48060000.mmc (GPIO UNCLAIMED) function pinmux_mmc1_pins group pinmux_mmc1_pins
+pin 61 (44e108f4.0): 48060000.mmc (GPIO UNCLAIMED) function pinmux_mmc1_pins group pinmux_mmc1_pins
+pin 62 (44e108f8.0): 48060000.mmc (GPIO UNCLAIMED) function pinmux_mmc1_pins group pinmux_mmc1_pins
+pin 63 (44e108fc.0): 48060000.mmc (GPIO UNCLAIMED) function pinmux_mmc1_pins group pinmux_mmc1_pins
+pin 64 (44e10900.0): 48060000.mmc (GPIO UNCLAIMED) function pinmux_mmc1_pins group pinmux_mmc1_pins
+pin 65 (44e10904.0): 48060000.mmc (GPIO UNCLAIMED) function pinmux_mmc1_pins group pinmux_mmc1_pins
+pin 66 (44e10908.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 67 (44e1090c.0): 4a100000.ethernet (GPIO UNCLAIMED) function cpsw_default group cpsw_default
+pin 68 (44e10910.0): 4a100000.ethernet (GPIO UNCLAIMED) function cpsw_default group cpsw_default
+pin 69 (44e10914.0): 4a100000.ethernet (GPIO UNCLAIMED) function cpsw_default group cpsw_default
+pin 70 (44e10918.0): ocp:leds (GPIO UNCLAIMED) function pinmux_led_pins group pinmux_led_pins
+pin 71 (44e1091c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 72 (44e10920.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 73 (44e10924.0): 4a100000.ethernet (GPIO UNCLAIMED) function cpsw_default group cpsw_default
+pin 74 (44e10928.0): 4a100000.ethernet (GPIO UNCLAIMED) function cpsw_default group cpsw_default
+pin 75 (44e1092c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 76 (44e10930.0): ocp:leds (GPIO UNCLAIMED) function pinmux_led_pins group pinmux_led_pins
+pin 77 (44e10934.0): ocp:gpio-keys (GPIO UNCLAIMED) function pinmux_button_pins group pinmux_button_pins
+pin 78 (44e10938.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 79 (44e1093c.0): 4a100000.ethernet (GPIO UNCLAIMED) function cpsw_default group cpsw_default
+pin 80 (44e10940.0): 4a100000.ethernet (GPIO UNCLAIMED) function cpsw_default group cpsw_default
+pin 81 (44e10944.0): 4a100000.ethernet (GPIO UNCLAIMED) function cpsw_default group cpsw_default
+pin 82 (44e10948.0): 4a101000.mdio (GPIO UNCLAIMED) function davinci_mdio_default group davinci_mdio_default
+pin 83 (44e1094c.0): 4a101000.mdio (GPIO UNCLAIMED) function davinci_mdio_default group davinci_mdio_default
+pin 84 (44e10950.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 85 (44e10954.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 86 (44e10958.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 87 (44e1095c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 88 (44e10960.0): ocp:gpio-keys (GPIO UNCLAIMED) function pinmux_button_pins group pinmux_button_pins
+pin 89 (44e10964.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 90 (44e10968.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 91 (44e1096c.0): ocp:gpio-keys (GPIO UNCLAIMED) function pinmux_button_pins group pinmux_button_pins
+pin 92 (44e10970.0): 44e09000.serial (GPIO UNCLAIMED) function pinmux_uart1_pins group pinmux_uart1_pins
+pin 93 (44e10974.0): 44e09000.serial (GPIO UNCLAIMED) function pinmux_uart1_pins group pinmux_uart1_pins
+pin 94 (44e10978.0): 4819c000.i2c (GPIO UNCLAIMED) function pinmux_i2c2_pins_sleep group pinmux_i2c2_pins_sleep
+pin 95 (44e1097c.0): 4819c000.i2c (GPIO UNCLAIMED) function pinmux_i2c2_pins_sleep group pinmux_i2c2_pins_sleep
+pin 96 (44e10980.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 97 (44e10984.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 98 (44e10988.0): 44e0b000.i2c (GPIO UNCLAIMED) function pinmux_i2c1_pins group pinmux_i2c1_pins
+pin 99 (44e1098c.0): 44e0b000.i2c (GPIO UNCLAIMED) function pinmux_i2c1_pins group pinmux_i2c1_pins
+pin 100 (44e10990.0): audio (GPIO UNCLAIMED) function audio_pins_default group audio_pins_default
+pin 101 (44e10994.0): audio (GPIO UNCLAIMED) function audio_pins_default group audio_pins_default
+pin 102 (44e10998.0): audio (GPIO UNCLAIMED) function audio_pins_default group audio_pins_default
+pin 103 (44e1099c.0): audio (GPIO UNCLAIMED) function audio_pins_default group audio_pins_default
+pin 104 (44e109a0.0): audio (GPIO UNCLAIMED) function audio_pins_default group audio_pins_default
+pin 105 (44e109a4.0): audio (GPIO UNCLAIMED) function audio_pins_default group audio_pins_default
+pin 106 (44e109a8.0): audio (GPIO UNCLAIMED) function audio_pins_default group audio_pins_default
+pin 107 (44e109ac.0): audio (GPIO UNCLAIMED) function audio_pins_default group audio_pins_default
+pin 108 (44e109b0.0): 4a100000.ethernet (GPIO UNCLAIMED) function cpsw_default group cpsw_default
+pin 109 (44e109b4.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 110 (44e109b8.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 111 (44e109bc.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 112 (44e109c0.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 113 (44e109c4.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 114 (44e109c8.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 115 (44e109cc.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 116 (44e109d0.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 117 (44e109d4.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 118 (44e109d8.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 119 (44e109dc.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 120 (44e109e0.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 121 (44e109e4.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 122 (44e109e8.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 123 (44e109ec.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 124 (44e109f0.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 125 (44e109f4.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 126 (44e109f8.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 127 (44e109fc.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 128 (44e10a00.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 129 (44e10a04.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 130 (44e10a08.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 131 (44e10a0c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 132 (44e10a10.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 133 (44e10a14.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 134 (44e10a18.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 135 (44e10a1c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 136 (44e10a20.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 137 (44e10a24.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 138 (44e10a28.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 139 (44e10a2c.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 140 (44e10a30.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)
+pin 141 (44e10a34.0): (MUX UNCLAIMED) (GPIO UNCLAIMED)

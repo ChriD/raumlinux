@@ -1,0 +1,87 @@
+#!/bin/sh
+
+start() {
+    echo "Starting Wi-Fi setup..."
+
+    apply_config() {
+        src="$1"
+        echo "Using wpa_supplicant config: $src"
+        mkdir -p /etc
+        tmp="/tmp/wpa_supplicant.conf.$$"
+        cat "$src" | sed '1s/^\xef\xbb\xbf//' | tr -d '\r' > "$tmp"
+        chmod 600 "$tmp"
+        mv -f "$tmp" /etc/wpa_supplicant.conf
+        chmod 600 /etc/wpa_supplicant.conf
+
+        killall wpa_supplicant 2>/dev/null
+
+        echo "Starting wpa_supplicant..."
+        /usr/sbin/wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant.conf
+
+        echo "Starting DHCP..."
+        /sbin/udhcpc -b -i wlan0
+    }
+
+    # Netboot-friendly path: allow config to live in the NFS root.
+    # Precedence is: /boot drop-in > removable boot partition drop-in > existing /etc.
+    if [ -f /boot/wpa_supplicant.conf ]; then
+        apply_config /boot/wpa_supplicant.conf
+        return 0
+    fi
+
+    mkdir -p /tmp/boot
+    
+    # Try to find the boot partition
+    # We check sda1 (USB), sdb1 (USB/Internal), and mmcblk0p1 (SD Card)
+    for dev in /dev/sda1 /dev/sdb1 /dev/mmcblk0p1; do
+        # Try mounting as vfat (common for boot partitions)
+        if mount -t vfat $dev /tmp/boot 2>/dev/null; then
+            if [ -f /tmp/boot/wpa_supplicant.conf ]; then
+                echo "Found wpa_supplicant.conf on $dev"
+                apply_config /tmp/boot/wpa_supplicant.conf
+                
+                umount /tmp/boot
+                return 0
+            fi
+            umount /tmp/boot
+        fi
+    done
+
+    if [ -f /etc/wpa_supplicant.conf ]; then
+        echo "Using existing /etc/wpa_supplicant.conf"
+
+        killall wpa_supplicant 2>/dev/null
+
+        echo "Starting wpa_supplicant..."
+        /usr/sbin/wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant.conf
+
+        echo "Starting DHCP..."
+        /sbin/udhcpc -b -i wlan0
+        return 0
+    fi
+
+    echo "No wpa_supplicant.conf found (checked /boot, boot partitions; /etc missing)."
+}
+
+stop() {
+    killall wpa_supplicant 2>/dev/null
+    killall udhcpc 2>/dev/null
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart|reload)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?

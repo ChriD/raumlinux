@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Deploy uImage+DTB to /srv/tftp (with backup)",
+			"type": "shell",
+			"command": "set -e\ncd /home/dietpi/builds/buildroot\n\nstamp=$(date +%Y%m%d-%H%M%S)\n# New canonical DTB name, plus legacy name for existing netboot configs\nnew_dtb=raumfeld-am33xx-ones.dtb\nold_dtb=am335x-raumfeld-minimal.dtb\n\n# Prefer the new DTB name if present, otherwise fall back to the old one\nif [ -e \"output/images/$new_dtb\" ]; then\n  src_dtb=$new_dtb\nelif [ -e \"output/images/$old_dtb\" ]; then\n  src_dtb=$old_dtb\nelse\n  echo \"ERROR: no DTB found in output/images (expected $new_dtb or $old_dtb)\" >&2\n  exit 1\nfi\n\nfor f in uImage $new_dtb $old_dtb; do\n  if [ -e \"/srv/tftp/$f\" ]; then\n    sudo cp -a \"/srv/tftp/$f\" \"/srv/tftp/$f.bak-$stamp\"\n  fi\ndone\n\nsudo cp -a output/images/uImage /srv/tftp/uImage\n\n# Deploy DTB under both names for now (bootloader compatibility)\nsudo cp -a \"output/images/$src_dtb\" \"/srv/tftp/$new_dtb\"\nsudo cp -a \"output/images/$src_dtb\" \"/srv/tftp/$old_dtb\"\n\nmd5sum output/images/uImage \"output/images/$src_dtb\" /srv/tftp/uImage \"/srv/tftp/$new_dtb\" \"/srv/tftp/$old_dtb\"",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Rebuild Linux (kernel+dtb)",
+			"type": "shell",
+			"command": "set -e\ncd /home/dietpi/builds/buildroot\nmake linux-rebuild",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

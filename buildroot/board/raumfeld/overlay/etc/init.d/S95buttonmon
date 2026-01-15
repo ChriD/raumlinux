@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# Optional gpio-keys debug monitor.
+# Enable by creating /boot/buttonmon.enable or /etc/buttonmon.enable
+
+case "$1" in
+	start)
+		if [ -e /boot/buttonmon.enable ] || [ -e /etc/buttonmon.enable ]; then
+			printf '%s\n' "Starting buttonmon (gpio-keys monitor)..." > /dev/console
+			/usr/bin/buttonmon.sh > /dev/console 2>&1 &
+			echo $! > /var/run/buttonmon.pid
+		else
+			# Disabled by default to avoid console spam.
+			:
+		fi
+		;;
+	stop)
+		if [ -r /var/run/buttonmon.pid ]; then
+			kill "$(cat /var/run/buttonmon.pid)" 2>/dev/null || true
+			rm -f /var/run/buttonmon.pid
+		fi
+		;;
+	restart)
+		$0 stop
+		$0 start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+		;;
+esac
+
+exit 0

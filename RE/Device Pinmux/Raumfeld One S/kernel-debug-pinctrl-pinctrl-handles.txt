@@ -1,0 +1,53 @@
+Requested pin control handlers their pinmux maps:
+device: 44e10800.pinmux current state: none
+  state: 0
+    type: MUX_GROUP controller pinctrl-single group: pinmux_clkout2_pin (0) function: pinmux_clkout2_pin (0)
+    type: MUX_GROUP controller pinctrl-single group: eth_wake_s0 (1) function: eth_wake_s0 (1)
+    type: MUX_GROUP controller pinctrl-single group: pinmux_gpio_phy_reset_pins (2) function: pinmux_gpio_phy_reset_pins (2)
+device: 44e09000.serial current state: default
+  state: default
+    type: MUX_GROUP controller pinctrl-single group: pinmux_uart1_pins (3) function: pinmux_uart1_pins (3)
+device: ocp:leds current state: default
+  state: default
+    type: MUX_GROUP controller pinctrl-single group: pinmux_led_pins (7) function: pinmux_led_pins (7)
+device: vdd_audio_regulator current state: default
+  state: default
+    type: MUX_GROUP controller pinctrl-single group: pinmux_vdd_audio_pins (8) function: pinmux_vdd_audio_pins (8)
+device: 44e0b000.i2c current state: default
+  state: default
+    type: MUX_GROUP controller pinctrl-single group: pinmux_i2c1_pins (9) function: pinmux_i2c1_pins (9)
+device: 4819c000.i2c current state: sleep
+  state: default
+    type: MUX_GROUP controller pinctrl-single group: pinmux_i2c2_pins_default (10) function: pinmux_i2c2_pins_default (10)
+  state: sleep
+    type: MUX_GROUP controller pinctrl-single group: pinmux_i2c2_pins_sleep (11) function: pinmux_i2c2_pins_sleep (11)
+device: 48060000.mmc current state: default
+  state: default
+    type: MUX_GROUP controller pinctrl-single group: pinmux_mmc1_pins (4) function: pinmux_mmc1_pins (4)
+  state: idle
+    type: MUX_GROUP controller pinctrl-single group: pinmux_cirq_pin (5) function: pinmux_cirq_pin (5)
+  state: sleep
+    type: MUX_GROUP controller pinctrl-single group: pinmux_mmc1_sleep_pins (6) function: pinmux_mmc1_sleep_pins (6)
+device: 4a100000.ethernet current state: default
+  state: default
+    type: MUX_GROUP controller pinctrl-single group: cpsw_default (15) function: cpsw_default (15)
+  state: sleep
+    type: MUX_GROUP controller pinctrl-single group: cpsw_sleep (16) function: cpsw_sleep (16)
+device: 4a101000.mdio current state: default
+  state: default
+    type: MUX_GROUP controller pinctrl-single group: davinci_mdio_default (17) function: davinci_mdio_default (17)
+  state: sleep
+    type: MUX_GROUP controller pinctrl-single group: davinci_mdio_sleep (18) function: davinci_mdio_sleep (18)
+device: ocp:gpio-keys current state: default
+  state: default
+    type: MUX_GROUP controller pinctrl-single group: pinmux_button_pins (19) function: pinmux_button_pins (19)
+device: 2-001c current state: default
+  state: default
+    type: MUX_GROUP controller pinctrl-single group: pinmux_sta350_pins_default (20) function: pinmux_sta350_pins_default (20)
+  state: sleep
+    type: MUX_GROUP controller pinctrl-single group: pinmux_sta350_pins_sleep (21) function: pinmux_sta350_pins_sleep (21)
+device: audio current state: default
+  state: default
+    type: MUX_GROUP controller pinctrl-single group: audio_pins_default (22) function: audio_pins_default (22)
+  state: sleep
+    type: MUX_GROUP controller pinctrl-single group: pinmux_audio_pins_sleep (23) function: pinmux_audio_pins_sleep (23)

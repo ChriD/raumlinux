@@ -1,0 +1,93 @@
+# USB Core (Must be built-in for rootfs on USB)
+CONFIG_USB=y
+CONFIG_USB_SUPPORT=y
+CONFIG_USB_COMMON=y
+CONFIG_USB_ARCH_HAS_HCD=y
+
+# USB Gadget (Must be built-in for NOP_USB_XCEIV to be built-in)
+CONFIG_USB_GADGET=y
+
+# USB PHY and Glue (AM335x specific)
+CONFIG_USB_PHY=y
+CONFIG_AM335X_PHY_USB=y
+CONFIG_NOP_USB_XCEIV=y
+CONFIG_AM335X_CONTROL_USB=y
+CONFIG_EXTCON=y
+CONFIG_EXTCON_USB_GPIO=y
+
+# MUSB Controller
+CONFIG_USB_MUSB_HDRC=y
+CONFIG_USB_MUSB_DUAL_ROLE=y
+
+# WiFi Clock
+CONFIG_COMMON_CLK_SI5351=y
+CONFIG_PWRSEQ_SIMPLE=y
+CONFIG_USB_MUSB_DSPS=y
+CONFIG_USB_MUSB_AM335X_CHILD=y
+CONFIG_USB_TI_CPPI41_DMA=y
+CONFIG_USB_INVENTRA_DMA=y
+
+# USB Storage
+CONFIG_USB_STORAGE=y
+
+# Wireless Support
+CONFIG_WIRELESS=y
+CONFIG_CFG80211=m
+CONFIG_MAC80211=m
+CONFIG_RFKILL=y
+
+# Initramfs
+# Re-enable later by setting the source directory, e.g.:
+# CONFIG_INITRAMFS_SOURCE="/home/dietpi/builds/buildroot/board/raumfeld/initramfs_tree"
+CONFIG_INITRAMFS_SOURCE=""
+# CONFIG_INITRAMFS_ROOT_UID=0
+# CONFIG_INITRAMFS_ROOT_GID=0
+
+# Audio (Raumfeld Element: STA350 codec + McASP0)
+CONFIG_SND_SOC_STA350=m
+
+# Baseline kernel features (Raumfeld / AM335x)
+# Make the kernel release string unique so kernel/modules can't silently drift
+# (critical when CONFIG_MODVERSIONS=y, otherwise you get module_layout CRC mismatches).
+CONFIG_LOCALVERSION="-raumfeld"
+# CONFIG_LOCALVERSION_AUTO is not set
+
+CONFIG_AEABI=y
+# CONFIG_OABI_COMPAT is not set
+
+CONFIG_VFP=y
+CONFIG_NEON=y
+
+# ARM stack unwinding: on ARM these are mutually exclusive.
+# - UNWINDER_ARM selects ARM_UNWIND (EABI unwind tables)
+# - UNWINDER_FRAME_POINTER selects FRAME_POINTER (requires !THUMB2_KERNEL)
+CONFIG_UNWINDER_ARM=y
+# CONFIG_UNWINDER_FRAME_POINTER is not set
+CONFIG_ARM_UNWIND=y
+
+CONFIG_FUTEX=y
+CONFIG_FUTEX_PI=y
+CONFIG_RT_MUTEXES=y
+
+CONFIG_HIGH_RES_TIMERS=y
+CONFIG_NO_HZ=y
+CONFIG_NO_HZ_IDLE=y
+
+# Preemption model: full PREEMPT (low latency)
+# CONFIG_PREEMPT_NONE is not set
+# CONFIG_PREEMPT_VOLUNTARY is not set
+CONFIG_PREEMPT=y
+
+CONFIG_PROC_FS=y
+CONFIG_SYSFS=y
+CONFIG_TMPFS=y
+CONFIG_TMPFS_POSIX_ACL=y
+
+CONFIG_DEVTMPFS=y
+CONFIG_DEVTMPFS_MOUNT=y
+
+CONFIG_SIGNALFD=y
+CONFIG_EVENTFD=y
+CONFIG_TIMERFD=y
+CONFIG_EPOLL=y
+CONFIG_SYSVIPC=y

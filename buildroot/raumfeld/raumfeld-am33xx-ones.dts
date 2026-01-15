@@ -1,0 +1,731 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/dts-v1/;
+
+#include "ti/omap/am33xx.dtsi"
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include <dt-bindings/pinctrl/am33xx.h>
+
+/ {
+	model = "Raumfeld Element (AM335x)";
+	compatible = "ti,am335x-raumfeld-element", "ti,am33xx";
+
+	pinctrl-names = "default";
+	/*
+	 * Keep only the global pinmux groups that don't conflict with
+	 * peripheral pinctrl states.
+	 *
+	 * The old running system exposed an (empty) eth_wake_s0 group in pinctrl
+	 * debug output. Do not mux XDMA_EVENT_INTR0 here, as that pad overlaps with
+	 * RMII1_REF_CLK used by CPSW.
+	 */
+	pinctrl-0 = <&clkout2_pin &gpio_phy_reset_pins &pmic_irq_pins>;
+
+        aliases {
+            serial0 = &uart0;
+        };
+
+	chosen {
+		stdout-path = &uart0;
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x80000000 0x10000000>; /* 256MB */
+	};
+
+	ref25m: ref25m-clock {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <25000000>;
+	};
+
+	mcasp0_sysclk: mcasp0-sysclk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		/* 24.576MHz = 512 * 48kHz */
+		clock-frequency = <24576000>;
+	};
+
+	wlan_pwrseq: wlan-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		reset-gpios = <&gpio2 0 GPIO_ACTIVE_LOW>;
+		clocks = <&si5351a 1>;
+		clock-names = "ext_clock";
+		post-power-on-delay-ms = <200>;
+	};
+
+	vmmc_reg: regulator-vmmc {
+		compatible = "regulator-fixed";
+		regulator-name = "vmmc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
+
+	vdd_audio_reg: regulator-vdd-audio {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&vdd_audio_pins>;
+		regulator-name = "vdd-audio";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio1 18 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		regulator-enable-ramp-delay = <1000>;
+	};
+
+	sta35x_vcc_reg: regulator-sta35x-vcc {
+		compatible = "regulator-fixed";
+		regulator-name = "sta35x-vcc";
+		regulator-min-microvolt = <25000000>;
+		regulator-max-microvolt = <25000000>;
+		regulator-always-on;
+	};
+
+	usb0_vbus: regulator-usb0-vbus {
+		compatible = "regulator-fixed";
+		regulator-name = "usb0-vbus";
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+		regulator-always-on;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		pinctrl-names = "default";
+		pinctrl-0 = <&led_pins>;
+
+		led1 {
+			label = "raumfeld:1";
+			gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
+			default-state = "off";
+		};
+
+		led2 {
+			label = "raumfeld:2";
+			gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+	};
+
+	gpio_keys: gpio-keys {
+		compatible = "gpio-keys";
+		pinctrl-names = "default";
+		pinctrl-0 = <&button_pins>;
+
+		power {
+			label = "Power";
+			linux,code = <KEY_POWER>;
+			gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+			wakeup-source;
+		};
+
+		setup {
+			label = "Setup";
+			linux,code = <KEY_SETUP>;
+			gpios = <&gpio2 18 GPIO_ACTIVE_LOW>;
+		};
+
+		reset {
+			label = "Reset";
+			linux,code = <KEY_F3>;
+			gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+		};
+
+		vol-up {
+			label = "Volume UP";
+			linux,code = <KEY_VOLUMEUP>;
+			gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
+		};
+
+		vol-down {
+			label = "Volume DOWN";
+			linux,code = <KEY_VOLUMEDOWN>;
+			gpios = <&gpio2 17 GPIO_ACTIVE_LOW>;
+		};
+
+		one {
+			label = "1";
+			linux,code = <KEY_1>;
+			gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
+		};
+
+		two {
+			label = "2";
+			linux,code = <KEY_2>;
+			gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
+		};
+
+		three {
+			label = "3";
+			linux,code = <KEY_3>;
+			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
+		};
+
+		four {
+			label = "4";
+			linux,code = <KEY_4>;
+			gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	wake_up {
+		compatible = "gpio-wakeup";
+		gpios = <&gpio0 19 GPIO_ACTIVE_LOW>;
+	};
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "Element";
+		simple-audio-card,format = "right_j";
+		simple-audio-card,bitclock-master = <&sound_cpu>;
+		simple-audio-card,frame-master = <&sound_cpu>;
+		simple-audio-card,frame-inversion;
+
+		sound_cpu: simple-audio-card,cpu {
+			sound-dai = <&mcasp0>;
+			clocks = <&mcasp0_sysclk>;
+			/*
+			 * McASP is BCLK/LRCLK master on this board. Make the driver use
+			 * its internal functional clock (AUXCLK) as the reference.
+			 *
+			 * Do NOT use simple-audio-card,mclk-fs here: that would force the
+			 * McASP sysclk to the codec MCLK (12.288MHz) which can be different
+			 * from McASP's actual functional clock and can yield ~2x playback.
+			 */
+			system-clock-direction-out;
+		};
+
+		simple-audio-card,codec {
+			sound-dai = <&sta350>;
+			clocks = <&si5351a 0>;
+		};
+	};
+};
+
+
+&am33xx_pinmux {
+
+	clkout2_pin: clkout2-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_XDMA_EVENT_INTR1, 0x00, MUX_MODE3) /* clkout2 */
+		>;
+	};
+
+	eth_wake_s0: eth-wake-s0-pins {
+		/* Intentionally left without pins to match old system behavior. */
+	};
+
+	gpio_phy_reset_pins: gpio-phy-reset-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_EMU0, 0x10, MUX_MODE7)
+		>;
+	};
+
+	/* TPS65217 IRQ is open-drain; ensure NNMI has a pull-up enabled. */
+	pmic_irq_pins: pmic-irq-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_NNMI, PIN_INPUT_PULLUP, MUX_MODE0)
+		>;
+	};
+
+	uart0_pins: uart0-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_UART0_RXD, 0x38, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_UART0_TXD, 0x00, MUX_MODE0)
+		>;
+	};
+
+	i2c0_pins: i2c0-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_I2C0_SDA, 0x60, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_I2C0_SCL, 0x60, MUX_MODE0)
+		>;
+	};
+
+	i2c2_pins_default: i2c2-default-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_UART1_CTSN, 0x20, MUX_MODE3)
+			AM33XX_PADCONF(AM335X_PIN_UART1_RTSN, 0x20, MUX_MODE3)
+		>;
+	};
+
+	i2c2_pins_sleep: i2c2-sleep-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_UART1_CTSN, 0x00, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_UART1_RTSN, 0x00, MUX_MODE7)
+		>;
+	};
+
+	cpsw_default: cpsw-default-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_MII1_CRS, 0x20, MUX_MODE1)
+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_ER, 0x20, MUX_MODE1)
+			AM33XX_PADCONF(AM335X_PIN_MII1_TX_EN, 0x00, MUX_MODE1)
+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD1, 0x00, MUX_MODE1)
+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD0, 0x00, MUX_MODE1)
+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD1, 0x20, MUX_MODE1)
+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD0, 0x20, MUX_MODE1)
+			AM33XX_PADCONF(AM335X_PIN_RMII1_REF_CLK, 0x20, MUX_MODE0)
+		>;
+	};
+
+	cpsw_sleep: cpsw-sleep-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_MII1_CRS, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_ER, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MII1_TX_EN, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD1, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD0, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD1, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD0, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_RMII1_REF_CLK, 0x20, MUX_MODE7)
+		>;
+	};
+
+	davinci_mdio_default: davinci-mdio-default-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_MDIO, 0x70, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_MDC, 0x10, MUX_MODE0)
+		>;
+	};
+
+	davinci_mdio_sleep: davinci-mdio-sleep-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_MDIO, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MDC, 0x20, MUX_MODE7)
+		>;
+	};
+
+	mmc1_pins: mmc1-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT0, 0x38, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT1, 0x38, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT2, 0x38, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT3, 0x38, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_MMC0_CMD, 0x38, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_MMC0_CLK, 0x38, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_GPMC_CSN3, 0x07, MUX_MODE7)
+		>;
+	};
+
+	/*
+	 * Match the old kernel pinctrl states for MMC (default/idle/sleep).
+	 * The old debug output showed an "idle" state mapping a single cirq pin.
+	 */
+	mmc1_cirq_pin: mmc1-cirq-pin {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT1, 0x38, MUX_MODE0)
+		>;
+	};
+
+	mmc1_sleep_pins: mmc1-sleep-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT0, 0x38, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT1, 0x38, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT2, 0x38, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT3, 0x38, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MMC0_CMD, 0x38, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MMC0_CLK, 0x38, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_GPMC_CSN3, 0x10, MUX_MODE7)
+		>;
+	};
+
+	button_pins: button-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_SPI0_CS1, 0x30, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD3, 0x30, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_UART0_RTSN, 0x30, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD13, 0x30, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_LCD_DATA11, 0x30, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_LCD_DATA15, 0x30, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD12, 0x30, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD15, 0x30, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_GPMC_AD14, 0x30, MUX_MODE7)
+		>;
+	};
+
+	led_pins: led-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_DV, 0x00, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_CLK, 0x00, MUX_MODE7)
+		>;
+	};
+
+	vdd_audio_pins: vdd-audio-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_GPMC_A2, 0x00, MUX_MODE7)
+		>;
+	};
+
+	audio_pins_default: audio-default-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_AHCLKX, 0x28, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKX, 0x08, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_FSX, 0x08, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_AXR0, 0x08, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_AXR1, 0x28, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_FSR, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_AHCLKR, 0x28, MUX_MODE0)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKR, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(0x0878, 0x27, MUX_MODE7)
+		>;
+	};
+
+	audio_pins_sleep: audio-sleep-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_AHCLKX, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKX, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_FSX, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_AXR0, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_AXR1, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_FSR, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_AHCLKR, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKR, 0x20, MUX_MODE7)
+		>;
+	};
+
+	sta350_pins_default: sta350-default-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_GPMC_A3, 0x00, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_GPMC_A4, 0x00, MUX_MODE7)
+		>;
+	};
+
+	sta350_pins_sleep: sta350-sleep-pins {
+		pinctrl-single,pins = <
+			AM33XX_PADCONF(AM335X_PIN_GPMC_A3, 0x20, MUX_MODE7)
+			AM33XX_PADCONF(AM335X_PIN_GPMC_A4, 0x20, MUX_MODE7)
+		>;
+	};
+};
+
+&uart0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0_pins>;
+	status = "okay";
+};
+
+&usb0 {
+	dr_mode = "host";
+	status = "okay";
+};
+
+&usb0_phy {
+	vbus-supply = <&usb0_vbus>;
+	status = "okay";
+};
+
+&usb1 {
+	status = "disabled";
+};
+
+&usb1_phy {
+	status = "disabled";
+};
+
+&usb_ctrl_mod {
+	status = "okay";
+};
+
+/*
+ * Fix kernel timekeeping: ensure sys_clkin_ck selects the board's 25MHz
+ * oscillator early (during clk init), before the dmtimer clockevent captures
+ * its rate.
+ */
+&sys_clkin_ck {
+	assigned-clocks = <&sys_clkin_ck>;
+	assigned-clock-parents = <&virt_25000000_ck>;
+};
+
+&i2c0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c0_pins>;
+	status = "okay";
+	clock-frequency = <100000>;
+
+	tps: tps@24 {
+		reg = <0x24>;
+	};
+
+	eeprom@50 {
+		compatible = "24c08";
+		reg = <0x50>;
+		pagesize = <16>;
+	};
+
+	si5351a: clock-generator@60 {
+		compatible = "silabs,si5351a";
+		reg = <0x60>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		#clock-cells = <1>;
+		clocks = <&ref25m>;
+		clock-names = "xtal";
+
+		clkout0 {
+			reg = <0>;
+			/* 12.288 MHz */
+			clock-frequency = <12288000>;
+		};
+		wifi_32k: clkout1 {
+			reg = <1>;
+			clock-frequency = <32768>;
+		};
+		clkout2 {
+			reg = <2>;
+		};
+	};
+};
+
+&i2c2 {
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&i2c2_pins_default>;
+	pinctrl-1 = <&i2c2_pins_sleep>;
+	status = "okay";
+	clock-frequency = <100000>;
+
+	sta350: codec@1c {
+		compatible = "st,sta350";
+		reg = <0x1c>;
+		#sound-dai-cells = <0>;
+		clocks = <&si5351a 0>;
+		clock-names = "mclk";
+		pinctrl-names = "default", "sleep";
+		pinctrl-0 = <&sta350_pins_default>;
+		pinctrl-1 = <&sta350_pins_sleep>;
+		reset-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+		power-down-gpios = <&gpio1 20 GPIO_ACTIVE_HIGH>;
+		st,output-conf = /bits/ 8 <0x00>;
+		st,ch1-output-mapping = /bits/ 8 <0x00>;
+		st,ch2-output-mapping = /bits/ 8 <0x01>;
+		st,ffx-power-output-mode = "variable-drop-compensation";
+		st,fault-detect-recovery;
+		st,overcurrent-warning-adjustment;
+		st,thermal-warning-recover;
+		st,thermal-warning-adjustment;
+		vdd-dig-supply = <&vdd_audio_reg>;
+		vdd-pll-supply = <&vdd_audio_reg>;
+		vcc-supply = <&sta35x_vcc_reg>;
+	};
+};
+
+#include "tps65217.dtsi"
+
+&tps {
+	/*
+	 * Mitigation for IRQ storm on newer kernels:
+	 * TPS65217 IRQ output is wired in a way that ends up stuck asserted on this
+	 * board/kernel combination, causing "irq XX: nobody cared" and the kernel
+	 * disabling the interrupt.
+	 *
+	 * Keep the PMIC for regulators, but do not wire up the parent interrupt.
+	 */
+
+	/* Match upstream AM335x TPS65217 usage (e.g. BeagleBone). */
+	ti,pmic-shutdown-controller;
+
+	charger {
+		status = "disabled";
+	};
+
+	pwrbutton {
+		status = "disabled";
+	};
+};
+
+&dcdc1_reg {
+	regulator-name = "vdd_mem";
+	regulator-always-on;
+};
+
+&dcdc2_reg {
+	regulator-name = "vdd_mpu";
+	regulator-always-on;
+};
+
+&dcdc3_reg {
+	regulator-name = "vdd_core";
+	regulator-always-on;
+};
+
+&ldo1_reg {
+	regulator-always-on;
+};
+
+&ldo2_reg {
+	regulator-always-on;
+};
+
+&ldo3_reg {
+	regulator-always-on;
+};
+
+&ldo4_reg {
+	regulator-always-on;
+};
+
+&mcasp0 {
+	status = "okay";
+	#sound-dai-cells = <0>;
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&audio_pins_default>;
+	pinctrl-1 = <&audio_pins_sleep>;
+
+	op-mode = <0>; /* DAVINCI_MCASP_IIS_MODE */
+	tdm-slots = <2>;
+	num-serializer = <16>;
+	serial-dir = <1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0>;
+	tx-num-evt = <1>;
+	rx-num-evt = <1>;
+};
+
+&mmc1 {
+	status = "okay";
+	cap-sdio-irq;
+	cap-power-off-card;
+	pinctrl-names = "default", "idle", "sleep";
+	pinctrl-0 = <&mmc1_pins>;
+	pinctrl-1 = <&mmc1_cirq_pin>;
+	pinctrl-2 = <&mmc1_sleep_pins>;
+	bus-width = <4>;
+	non-removable;
+	keep-power-in-suspend;
+	enable-sdio-wakeup;
+	vmmc-supply = <&vmmc_reg>;
+	mmc-pwrseq = <&wlan_pwrseq>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	mwifiex: wifi@1 {
+		compatible = "marvell,sd8787";
+		reg = <1>;
+	};
+
+	btmrvl: bluetooth@2 {
+		compatible = "marvell,sd8787-bt";
+		reg = <2>;
+	};
+};
+
+&elm {
+	status = "disabled";
+};
+
+&gpmc {
+	status = "disabled";
+	ranges = <0 0 0x08000000 0x10000000>; /* CS0 */
+
+	nand@0,0 {
+		status = "disabled";
+		compatible = "ti,omap2-nand";
+		reg = <0 0 4>; /* CS0, offset 0, IO size 4 */
+		interrupt-parent = <&gpmc>;
+		interrupts = <0 IRQ_TYPE_NONE>,
+			     <1 IRQ_TYPE_NONE>;
+		rb-gpios = <&gpmc 0 GPIO_ACTIVE_HIGH>; /* gpmc_wait0 */
+		ti,nand-xfer-type = "prefetch-dma";
+		ti,nand-ecc-opt = "bch8";
+		ti,elm-id = <&elm>;
+		nand-bus-width = <8>;
+		gpmc,device-width = <1>;
+		gpmc,sync-clk-ps = <0>;
+		gpmc,cs-on-ns = <0>;
+		gpmc,cs-rd-off-ns = <44>;
+		gpmc,cs-wr-off-ns = <44>;
+		gpmc,adv-on-ns = <6>;
+		gpmc,adv-rd-off-ns = <34>;
+		gpmc,adv-wr-off-ns = <44>;
+		gpmc,we-on-ns = <6>;
+		gpmc,we-off-ns = <40>;
+		gpmc,oe-on-ns = <6>;
+		gpmc,oe-off-ns = <54>;
+		gpmc,page-burst-access-ns = <0>;
+		gpmc,access-ns = <64>;
+		gpmc,rd-cycle-ns = <82>;
+		gpmc,wr-cycle-ns = <82>;
+		gpmc,cycle2cycle-delay-ns = <0>;
+		gpmc,bus-turnaround-ns = <0>;
+		gpmc,wait-monitoring-ns = <0>;
+		gpmc,clk-activation-ns = <0>;
+		gpmc,wr-data-mux-bus-ns = <0>;
+		gpmc,wait-on-read;
+		gpmc,wait-on-write;
+
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		partition@0 {
+			label = "SPL";
+			reg = <0x00000000 0x00020000>;
+		};
+		partition@1 {
+			label = "SPL.backup1";
+			reg = <0x00020000 0x00020000>;
+		};
+		partition@2 {
+			label = "SPL.backup2";
+			reg = <0x00040000 0x00020000>;
+		};
+		partition@3 {
+			label = "Firmware Data";
+			reg = <0x00060000 0x00020000>;
+		};
+		partition@4 {
+			label = "U-Boot";
+			reg = <0x00080000 0x00100000>;
+		};
+		partition@5 {
+			label = "U-Boot Env";
+			reg = <0x00180000 0x00020000>;
+		};
+		partition@6 {
+			label = "Kernel";
+			reg = <0x001a0000 0x00600000>;
+		};
+		partition@7 {
+			label = "DTB";
+			reg = <0x007a0000 0x00040000>;
+		};
+		partition@8 {
+			label = "File System";
+			reg = <0x007e0000 0x0f820000>;
+		};
+	};
+};
+
+&mac_sw {
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&cpsw_default>;
+	pinctrl-1 = <&cpsw_sleep>;
+	status = "okay";
+};
+
+&davinci_mdio_sw {
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&davinci_mdio_default>;
+	pinctrl-1 = <&davinci_mdio_sleep>;
+	status = "okay";
+
+	ethphy0: ethernet-phy@4 {
+		reg = <4>;
+		max-speed = <100>;
+		/* reset-gpios = <&gpio3 7 GPIO_ACTIVE_HIGH>; */
+		/* reset-assert-us = <300>; */
+		/* reset-deassert-us = <20000>; */
+	};
+};
+
+&cpsw_port1 {
+	phy-handle = <&ethphy0>;
+	phy-mode = "rmii";
+	phys = <&phy_gmii_sel 1 1>; /* RMII, external refclk */
+	ti,dual-emac-pvid = <1>;
+};
+
+&cpsw_port2 {
+	status = "disabled";
+};

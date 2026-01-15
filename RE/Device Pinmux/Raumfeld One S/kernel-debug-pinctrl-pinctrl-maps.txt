@@ -1,0 +1,147 @@
+Pinctrl maps:
+device 44e10800.pinmux
+state 0
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_clkout2_pin
+function pinmux_clkout2_pin
+
+device 44e10800.pinmux
+state 0
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group eth_wake_s0
+function eth_wake_s0
+
+device 44e10800.pinmux
+state 0
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_gpio_phy_reset_pins
+function pinmux_gpio_phy_reset_pins
+
+device 44e09000.serial
+state default
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_uart1_pins
+function pinmux_uart1_pins
+
+device ocp:leds
+state default
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_led_pins
+function pinmux_led_pins
+
+device vdd_audio_regulator
+state default
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_vdd_audio_pins
+function pinmux_vdd_audio_pins
+
+device 44e0b000.i2c
+state default
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_i2c1_pins
+function pinmux_i2c1_pins
+
+device 4819c000.i2c
+state default
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_i2c2_pins_default
+function pinmux_i2c2_pins_default
+
+device 4819c000.i2c
+state sleep
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_i2c2_pins_sleep
+function pinmux_i2c2_pins_sleep
+
+device 48060000.mmc
+state default
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_mmc1_pins
+function pinmux_mmc1_pins
+
+device 48060000.mmc
+state idle
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_cirq_pin
+function pinmux_cirq_pin
+
+device 48060000.mmc
+state sleep
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_mmc1_sleep_pins
+function pinmux_mmc1_sleep_pins
+
+device 4a100000.ethernet
+state default
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group cpsw_default
+function cpsw_default
+
+device 4a100000.ethernet
+state sleep
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group cpsw_sleep
+function cpsw_sleep
+
+device 4a101000.mdio
+state default
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group davinci_mdio_default
+function davinci_mdio_default
+
+device 4a101000.mdio
+state sleep
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group davinci_mdio_sleep
+function davinci_mdio_sleep
+
+device ocp:gpio-keys
+state default
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_button_pins
+function pinmux_button_pins
+
+device 2-001c
+state default
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_sta350_pins_default
+function pinmux_sta350_pins_default
+
+device 2-001c
+state sleep
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_sta350_pins_sleep
+function pinmux_sta350_pins_sleep
+
+device audio
+state default
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group audio_pins_default
+function audio_pins_default
+
+device audio
+state sleep
+type MUX_GROUP (2)
+controlling device 44e10800.pinmux
+group pinmux_audio_pins_sleep
+function pinmux_audio_pins_sleep

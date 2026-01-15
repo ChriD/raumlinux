@@ -1,0 +1,16 @@
+*.swp
+*.tmp
+*.bak
+/.vscode/
+buildroot/output/
+buildroot/dl/
+
+# Optional: ignore built images (keep if you prefer)
+# images/
+]633;E;{ echo ''\x3b echo '# Large artifacts (keep locally)'\x3b echo 'rootFS/'\x3b echo '*.tar'\x3b echo '*.tar.gz'\x3b echo '*.tar.zst'\x3b echo '*.zip'\x3b } >> .gitignore;599334d8-f74f-40a1-a0d0-09f8d9044da7]633;C
+# Large artifacts (keep locally)
+rootFS/
+*.tar
+*.tar.gz
+*.tar.zst
+*.zip

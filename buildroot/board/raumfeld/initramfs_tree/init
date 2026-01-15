@@ -1,0 +1,98 @@
+#!/bin/sh
+
+# Mount essential filesystems
+/bin/mount -t proc proc /proc
+/bin/mount -t sysfs sysfs /sys
+/bin/mount -t devtmpfs devtmpfs /dev
+
+# Redirect stdio to console
+exec 0</dev/console
+exec 1>/dev/console
+exec 2>/dev/console
+
+echo "Initramfs: Starting..."
+
+# Parse kernel command line for root=LABEL=...
+CMDLINE=$(cat /proc/cmdline)
+ROOT_LABEL=""
+
+for param in $CMDLINE; do
+    case $param in
+        root=LABEL=*)
+            ROOT_LABEL="${param#root=LABEL=}"
+            ;;
+    esac
+done
+
+if [ -z "$ROOT_LABEL" ]; then
+    echo "Initramfs: No root=LABEL=... found in cmdline. Defaulting to 'rootfs'."
+    ROOT_LABEL="rootfs"
+fi
+
+echo "Initramfs: Waiting for device with LABEL=${ROOT_LABEL}..."
+
+TARGET=""
+# Wait up to 20 seconds for the USB stick
+i=0
+while [ $i -lt 20 ]; do
+    TARGET=$(/bin/blkid -L "${ROOT_LABEL}")
+    
+    # Fallback: Parse blkid output manually
+    if [ -z "$TARGET" ]; then
+        TARGET=$(/bin/blkid | /bin/grep "LABEL=\"${ROOT_LABEL}\"" | /bin/cut -d: -f1)
+    fi
+
+    if [ -n "$TARGET" ]; then
+        echo "Initramfs: Found ${ROOT_LABEL} at ${TARGET}"
+        break
+    fi
+    
+    echo "Initramfs: Waiting for ${ROOT_LABEL}... ($i/20)"
+    sleep 1
+    i=$((i+1))
+done
+
+if [ -z "$TARGET" ]; then
+    echo "Initramfs: ERROR: Root device not found!"
+    echo "Available devices:"
+    /bin/blkid
+    echo "Dropping to shell..."
+    exec /bin/sh
+fi
+
+# Mount the root device
+echo "Initramfs: Mounting ${TARGET} to /newroot"
+/bin/mount "${TARGET}" /newroot
+
+if [ ! -x "/newroot/sbin/init" ]; then
+    echo "Initramfs: WARNING: /newroot/sbin/init not found or not executable (could be a symlink)."
+    ls -l /newroot/sbin/init
+    # echo "Dropping to shell..."
+    # exec /bin/sh
+fi
+
+echo "Initramfs: /newroot/sbin/init found:"
+ls -l /newroot/sbin/init
+
+# Verify binary integrity
+echo "Initramfs: Verifying /newroot/bin/busybox..."
+if [ -f "/newroot/bin/busybox" ]; then
+    echo "Initramfs: Busybox binary found."
+else
+    echo "Initramfs: ERROR: /newroot/bin/busybox not found!"
+fi
+
+# Clean up
+/bin/umount /proc
+/bin/umount /sys
+# /bin/umount /dev  <-- DO NOT UNMOUNT DEV
+
+# Move /dev to newroot
+# This is critical because switch_root will wipe the old root, including the devtmpfs mount
+# if we don't move it to the new root.
+echo "Initramfs: Moving /dev to /newroot/dev..."
+mount --move /dev /newroot/dev
+
+# Switch root
+echo "Initramfs: Switching root..."
+exec /bin/switch_root /newroot /sbin/init
