@@ -71,3 +71,7 @@ boot
 - fw_setenv bootcmd 'run net_boot; if usb start && fatload usb 0:1 ${loadaddr} uImage && fatload usb 0:1 ${fdtaddr} am335x-raumfeld-minimal.dtb; then run usb_boot; else run nand_boot; fi'
 
 
+## Other
+- Button test script can be run by buttonmon.sh
+It will output the pressed button on the command line. You may add some action on those buttons if you are familiar with linux
+
