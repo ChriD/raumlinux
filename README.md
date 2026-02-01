@@ -51,3 +51,13 @@ Teufel One M | Gen 3 |  |  |
 - USB boot vs netboot depends on U-Boot/bootcmd configuration.
 - Some older U-Boot versions don’t like certain USB3 sticks; USB2 often works best.
 
+## Boot Args Standard
+- fw_setenv usb_args 'setenv bootargs console=ttyS0,115200 earlycon ignore_loglevel panic=10 root=PARTUUID=0087b9aa-05 rw rootfstype=ext4 rootwait'
+- fw_setenv usb_boot 'echo Booting from usb ...; run usb_args; bootm ${loadaddr} - ${fdtaddr}'
+- fw_setenv bootcmd 'if usb start && fatload usb 0:1 ${loadaddr} uImage && fatload usb 0:1 ${fdtaddr} am335x-raumfeld-minimal.dtb; then run usb_boot; else run nand_boot;
+
+- ## Boot Args Network
+- fw_setenv net_boot 'setenv autoload no; if dhcp; then setenv serverip 10.0.0.46; tftp ${loadaddr} uImage; tftp ${fdtaddr} am335x-raumfeld-minimal.dtb; run net_args; bootm ${loadaddr} - ${fdtaddr}; fi'
+- fw_setenv bootcmd 'run net_boot; if usb start && fatload usb 0:1 ${loadaddr} uImage && fatload usb 0:1 ${fdtaddr} am335x-raumfeld-minimal.dtb; then run usb_boot; else run nand_boot; fi'
+
+
