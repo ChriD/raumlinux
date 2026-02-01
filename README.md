@@ -26,24 +26,24 @@ If you need it, keep it locally or publish it as a separate download.
 
 ## Device overview (WIP)
 
-Type | Gen | CPU | SSH | Availability
---- | --- | --- | --- | ---
-Raumfeld Base | Gen 1 |  |  | 
-Raumfeld Expand | Gen 1 |  |  | 
-Raumfeld Speaker S | Gen 1 |  |  | 
-Raumfeld Speaker M (Adam) | Gen 1 |  |  | 
-Raumfeld Speaker L | Gen 1 |  |  | 
-Raumfeld Stereo Cubes | Gen 1 |  |  | 
-Raumfeld Connector 1 | Gen 1 |  |  | 
-Raumfeld Connector 2 | Gen 2 | AM33xx |  | 
-Raumfeld One S | Gen 2 | AM33xx |  | 
-Raumfeld One M | Gen 2 |  |  | 
-Teufel Connector | Gen 2 |  |  | 
-Teufel One S | Gen 3 |  |  | 
-Teufel Stereo M | Gen 3 |  |  | 
-Teufel Stereo L | Gen 3 |  |  | 
-Teufel Streamer | Gen 3 |  |  | 
-Teufel One M | Gen 3 |  |  | 
+Type | Gen | CPU | SSH | Boot Time | Availability
+--- | --- | --- | --- | --- | ---
+Raumfeld Base | Gen 1 |  |  |  |
+Raumfeld Expand | Gen 1 |  |  |  |
+Raumfeld Speaker S | Gen 1 |  |  |   |
+Raumfeld Speaker M (Adam) | Gen 1 |  |  |  |
+Raumfeld Speaker L | Gen 1 |  |  |  |
+Raumfeld Stereo Cubes | Gen 1 |  |  |  |
+Raumfeld Connector 1 | Gen 1 |  |  |  |
+Raumfeld Connector 2 | Gen 2 | AM33xx |  |  |
+Raumfeld One S | Gen 2 | AM33xx |  | 210s |
+Raumfeld One M | Gen 2 |  |  |  |
+Teufel Connector | Gen 2 |  |  |  |
+Teufel One S | Gen 3 |  |  |  |
+Teufel Stereo M | Gen 3 |  |  |  | 
+Teufel Stereo L | Gen 3 |  |  |  |
+Teufel Streamer | Gen 3 |  |  |  | 
+Teufel One M | Gen 3 |  |  |  | 
 
 ## Installation notes (WIP)
 
