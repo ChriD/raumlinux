@@ -78,4 +78,5 @@ reset
 ## Other
 - Button test script can be run by buttonmon.sh
 It will output the pressed button on the command line. You may add some action on those buttons if you are familiar with linux
+- LED test script can be run by ledmon.sh
 
