@@ -57,6 +57,7 @@ Teufel One M | Gen 3 |  |  |
 - fw_setenv bootcmd 'if usb start && fatload usb 0:1 ${loadaddr} uImage && fatload usb 0:1 ${fdtaddr} device.dtb; then run usb_boot; else run nand_boot;
 
 ## Boot Args Network
+- Attention! Do only if you have Serial access to the device!
 - fw_setenv net_boot 'setenv autoload no; if dhcp; then setenv serverip 10.0.0.46; tftp ${loadaddr} uImage; tftp ${fdtaddr} am335x-raumfeld-minimal.dtb; run net_args; bootm ${loadaddr} - ${fdtaddr}; fi'
 - fw_setenv bootcmd 'run net_boot; if usb start && fatload usb 0:1 ${loadaddr} uImage && fatload usb 0:1 ${fdtaddr} am335x-raumfeld-minimal.dtb; then run usb_boot; else run nand_boot; fi'
 
